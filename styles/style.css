@@ -11,3 +11,22 @@ img {
     transition: all 3s linear;
 }
 
+.d-none {
+    display: none;
+}
+
+/* .game-field {
+    background-image: url("/assets/arena-background.png");
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+} */
+
+.form-wrapper {
+    background-image: url("../assets/background.png");
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
