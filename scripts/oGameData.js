@@ -19,7 +19,7 @@ const oGameData = {
         this.trainerAge = 0;
         this.trainerGender = "";
 
-     
+
 
     },
     // Metod som slumpar fram ett tal som förhåller sig mellan 0 och webbläsarens bredd minus bildens bredd
@@ -49,6 +49,6 @@ const oGameData = {
     },
 };
 
-    }
-}
+
+
 
