@@ -1,4 +1,3 @@
-const log = (msg) => console.log(msg);
 
 /* const gameMusic = document.querySelector("#gameMusic"); */
 const startForm = document.querySelector("#form");
@@ -9,6 +8,7 @@ const gameMusic = document.querySelector("audio");
 // Ta även bort formen med hjälp av d-none samt ta bort bakgrundsbilden.
 // randomfunktion som går igenom våran pokemon array behövs här.
 
+
 //Starta spel när formulär skickas utan error
 startForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -16,21 +16,61 @@ startForm.addEventListener("submit", function (event) {
     // Definera Player
     oGameData.trainerName = document.querySelector("#nick").value;
     oGameData.trainerAge = document.querySelector("#age").value;
-    oGameData.trainerGender = document.querySelector("#gender").value;
+    oGameData.trainerGender = document.querySelector("input[name='gender']:checked")
+
     // try catch för validering
     try {
+
     } catch (error) { }
 
     //dölj starskärm visa spel
     document.querySelector("form-wrapper").classList.add("d-none");
     gameField.classList.remove("d-none");
 
-    startForm();
-});
+        if (oGameData.trainerName.length < 5 || oGameData.trainerName.length > 10){
+            throw { message: "Please enter a name that is more than 5, less than 10", nodeRef: document.querySelector("#nick") };
+        }
+        
+        if (oGameData.trainerAge < 5 || oGameData.trainerAge > 10) {
+            throw { message: "Enter a correct Age", nodeRef: document.querySelector("#age") };
+        }
+
+        if (!oGameData.trainerGender){
+            throw { message: "Enter a Gender", nodeRef: document.querySelector("#gender") };
+        }
+         //dölj startsida, visa spel
+        startGame();
+     }
+
+       catch (error) {
+
+        alert(error.message);
+
+        // if selected query has an error, focus it, and clear the field
+        if (error.nodeRef) {
+            error.nodeRef.value = ""; 
+            error.nodeRef.focus();  
+        }
+
+    
+    
+    
+
+}
+
 
 function startGame() {
+
     gameMusic.currentTime = 0;
     // gameMusic.play(); kommentrade ut för ja tröttna på musiken
+
+
+
+    startForm.classList.add("d-none");
+    gameField.classList.remove(".d-none")
+    
+    gameMusic.play();
+    //Starta spel och tid
 
     oGameData.startTimeInMilliseconds();
     oGameData.nmbrOfCaughtPokemons = 0;
@@ -94,3 +134,4 @@ function releasePokemon(pokemon) {
 //TIM - Catch and release pokemon , jesper, shiny jesper
 // Emund - randomize spawn.
 //Robin -
+});
