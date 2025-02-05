@@ -1,19 +1,40 @@
 
 /* const gameMusic = document.querySelector("#gameMusic"); */
-const startForm = document.querySelector("#form");
+const 
+Form = document.querySelector("#form");
 const gameField = document.querySelector("#gameField");
 const gameMusic = document.querySelector("audio");
 
+
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+    return array;
+};
+
+function updatePokemonPosition() {
+    randomPokemon.forEach((pokemon, i) => {
+        let pokemonImg = document.querySelectorAll(".pokemonImg")[i];
+
+        pokemonImg.style.left = `${oGameData.getLeftPosition()}px`;
+        pokemonImg.style.top = `${oGameData.getTopPosition()}px`;
+    });
+    setInterval(updatePokemonPosition, 3000);
+}
 
 
 // efter formvalidate skall gameField visas genom att ta bort klassen d-none med dom-manip. Lägg till bakgrundsbilden i CSS för arenan.
 // Ta även bort formen med hjälp av d-none samt ta bort bakgrundsbilden.
 // randomfunktion som går igenom våran pokemon array behövs här.
 
-3
+
 //Starta spel när formulär skickas utan error
 startForm.addEventListener("submit", function (event) {
     event.preventDefault();
+
 
     
     oGameData.trainerName = document.querySelector("#nick").value;
@@ -72,7 +93,67 @@ function startGame() {
     // gameMusic.play(); kommentrade ut för ja tröttna på musiken
     
     
-    // gameMusic.play();
+
+    //     // Definera Player
+    oGameData.trainerName = document.querySelector("#nick").value;
+    oGameData.trainerAge = document.querySelector("#age").value;
+    oGameData.trainerGender = document.querySelector("input[name='gender']:checked")
+
+    // try catch för validering
+    try {
+
+    } catch (error) { }
+
+    //dölj starskärm visa spel
+    document.querySelector("form-wrapper").classList.add("d-none");
+    gameField.classList.remove("d-none");
+
+
+        if (oGameData.trainerName.length < 5 || oGameData.trainerName.length > 10){
+            throw { message: "Please enter a name that is more than 5, less than 10", nodeRef: document.querySelector("#nick") };
+        }
+        
+        if (oGameData.trainerAge < 5 || oGameData.trainerAge > 10) {
+            throw { message: "Enter a correct Age", nodeRef: document.querySelector("#age") };
+        }
+
+        if (!oGameData.trainerGender){
+            throw { message: "Enter a Gender", nodeRef: document.querySelector("#gender") };
+        }
+         //dölj startsida, visa spel
+        startGame();
+     }
+
+       catch (error) {
+
+        alert(error.message);
+
+        // if selected query has an error, focus it, and clear the field
+        if (error.nodeRef) {
+            error.nodeRef.value = ""; 
+            error.nodeRef.focus();  
+        }
+
+    
+    
+    
+
+}
+
+
+
+function startGame() {
+
+    gameMusic.currentTime = 0;
+    // gameMusic.play(); kommentrade ut för ja tröttna på musiken
+
+
+
+    startForm.classList.add("d-none");
+    gameField.classList.remove(".d-none")
+    
+    gameMusic.play();
+
     //Starta spel och tid
 
     oGameData.startTimeInMilliseconds();
@@ -80,8 +161,6 @@ function startGame() {
 
     // for loop för att skapa upp våran array och tilldela bilderna till varje pokemon
 
-   
-   
 
     const pokemonArray = oGameData.pokemonNumbers;
 
@@ -93,6 +172,7 @@ function startGame() {
         };
         pokemonArray.push(pokemonObject);
     }
+
 
 const shuffle = (array) => {
         for (let i = array.length - 1; i >= 0; i--) {
@@ -111,7 +191,9 @@ const shuffle = (array) => {
         let pokemonImg = document.createElement("img");
         pokemonImg.className = "pokemonImg";
         pokemonImg.src = pokemon.imageUrl;
+
         /* pokemonImg.setAttribute("data-original-src", pokemon.imageUrl); */
+
         pokemonImg.style.position = "absolute";
 
         pokemonImg.style.left = `${oGameData.getLeftPosition()}px`;
@@ -119,6 +201,7 @@ const shuffle = (array) => {
 
         gameField.appendChild(pokemonImg);
     });
+
 
     
     
@@ -229,6 +312,41 @@ function catchPokemon(pokemon) {
 }
 
 
+    updatePokemonPosition();
+
+    oGameData.caughtPokemons = [];
+
+}
+
+
+function catchPokemon(pokemon) {
+    let originalSrc = pokemon.getAttribute("data-original-src");
+
+    //kolla om pokemon redan är fångad
+    if (pokemon.getAttribute("data-caught")) {
+        //släpp pokemon fri och återställ tidigare pokemon bild
+        releasePokemon(pokemon);
+    } else {
+        //fånga pokemon och byt till pokeboll
+        pokemon.src = "assets/ball.webp";
+        pokemon.classList.add("caught");
+        pokemon.setAttribute("data-caught", "true");
+
+
+        //lägg till i listan om den inte redan finns 
+        if (!oGameData.caughtPokemons.includes(originalSrc)) {
+            oGameData.caughtPokemons.push(originalSrc);
+        }
+        //kontrollera om alla pokemons har fångats
+        if (oGameData.caughtPokemons.length === 10) {
+            endGame();
+        }
+
+    }
+
+}
+
+
 function releasePokemon(pokemon) {
     let originalSrc = pokemon.getAttribute("data-original-src");
 
@@ -236,7 +354,11 @@ function releasePokemon(pokemon) {
         //sätt tillbaka orginal pokemon
         pokemon.src = originalSrc;
         pokemon.classList.remove("caught");
+
         pokemon.removeAttribute("data-caught");
+
+        pokemon.removeArrtibute("data-caught");
+
 
         //ta bort från fångad listan
         const index = oGameData.caughtPokemons.indexOf(originalSrc);
@@ -257,3 +379,4 @@ function releasePokemon(pokemon) {
 //TIM - Catch and release pokemon , jesper, shiny jesper
 // Emund - randomize spawn.
 //Robin -
+});
