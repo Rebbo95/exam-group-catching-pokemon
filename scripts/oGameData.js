@@ -14,9 +14,13 @@ const oGameData = {
         this.startTime = 0;
         this.endTime = 0;
         this.timerId = null;
-        this.trainerName = '';
+
+        this.trainerName = "";
         this.trainerAge = 0;
-        this.trainerGender = '';
+        this.trainerGender = "";
+
+     
+
     },
     // Metod som slumpar fram ett tal som förhåller sig mellan 0 och webbläsarens bredd minus bildens bredd
     getLeftPosition: () => {
@@ -41,5 +45,10 @@ const oGameData = {
     // Metod som räknar ut och returnerar antalet millisekunder det tog att fånga alla 10 pokemons
     nmbrOfMilliseconds: function () {
         return this.endTime - this.startTime;
+
+    },
+};
+
     }
 }
+
