@@ -4,11 +4,19 @@ const startForm = document.querySelector("#form");
 const gameField = document.querySelector("#gameField");
 const gameMusic = document.querySelector("audio");
 
+const pokemonArray = oGameData.pokemonNumbers;
+
 
 //Starta spel när formulär skickas utan error
 startForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
+    validateForm();
+
+});
+
+
+function validateForm() {
     oGameData.trainerName = document.querySelector("#nick").value;
     oGameData.trainerAge = document.querySelector("#age").value;
     oGameData.trainerGender = document.querySelector("input[name='gender']:checked");
@@ -28,13 +36,7 @@ startForm.addEventListener("submit", function (event) {
         }
 
         document.querySelector("#errorMsg").textContent = "";
-        /*   if (!oGameData.trainerGender || (oGameData.trainerGender !== "boy" && oGameData.trainerGender !== "girl")) {
-              throw { message: "Please select a Gender", nodeRef: document.querySelector("input[name='gender']") };
-          } */
 
-
-
-        //dölj startsida, visa spel
         startGame();
 
     } catch (error) {
@@ -44,9 +46,10 @@ startForm.addEventListener("submit", function (event) {
             error.nodeRef.value = "";
             error.nodeRef.focus();
         }
+        return false;
     }
+}
 
-});
 
 
 function startGame() {
@@ -60,35 +63,59 @@ function startGame() {
     document.querySelector("#form").classList.add("d-none");
 
 
-
     //Starta spel och tid
     oGameData.startTimeInMilliseconds();
     oGameData.nmbrOfnmbrOfCaughtPokemons = 0;
 
     // for loop för att skapa upp våran array och tilldela bilderna till varje pokemon
-    const pokemonArray = oGameData.pokemonNumbers;
 
-    for (let i = 1; i <= 151; i++) {
-        const formattedNumber = i.toString().padStart(3, "0");
-        const pokemonObject = {
-            number: i,
-            imageUrl: `./assets/pokemons/${formattedNumber}.png`,
-        };
-        pokemonArray.push(pokemonObject);
+    if (pokemonArray.length === 0) {
+        for (let i = 1; i <= 151; i++) {
+            const formattedNumber = i.toString().padStart(3, "0");
+            const pokemonObject = {
+                number: i,
+                imageUrl: `./assets/pokemons/${formattedNumber}.png`,
+            };
+            pokemonArray.push(pokemonObject);
+        }
     }
 
-
-    const shuffle = (array) => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
-        }
-        return array;
-    };
-
     shuffle(pokemonArray);
-
     const randomPokemon = pokemonArray.slice(0, 10);
+    Spawnpokemon(randomPokemon);
+
+    // updates pokemon position
+    function updatePokemonPosition() {
+        randomPokemon.forEach((pokemon, i) => {
+            let pokemonImg = document.querySelectorAll(".pokemonImg")[i];
+
+            pokemonImg.style.left = `${oGameData.getLeftPosition()}px`;
+            pokemonImg.style.top = `${oGameData.getTopPosition()}px`;
+        });
+
+    }
+    setTimeout(() => {
+        updatePokemonPosition();
+        setInterval(updatePokemonPosition, 3000);
+    }, 500);
+
+    oGameData.nmbrOfCaughtPokemons = [];
+
+}
+
+
+
+
+// Fisher Yates shuffle
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+    return array;
+}
+//function for spawning pokemons to gamefield
+function Spawnpokemon(randomPokemon) {
 
     randomPokemon.forEach((pokemon) => {
         let pokemonImg = document.createElement("img");
@@ -107,35 +134,32 @@ function startGame() {
         });
         gameField.appendChild(pokemonImg);
     });
-
-    function updatePokemonPosition() {
-        randomPokemon.forEach((pokemon, i) => {
-            let pokemonImg = document.querySelectorAll(".pokemonImg")[i];
-
-            pokemonImg.style.left = `${oGameData.getLeftPosition()}px`;
-            pokemonImg.style.top = `${oGameData.getTopPosition()}px`;
-        });
-
-    }
-
-    setTimeout(() => {
-        updatePokemonPosition();
-        setInterval(updatePokemonPosition, 3000);
-    }, 0.5);
-
-    oGameData.nmbrOfCaughtPokemons = [];
-
 }
+
+
 
 function highScore(newScore) {
     // Load existing scores from localStorage
     let storedScores = localStorage.getItem("highscore");
-    let highscore = storedScores ? JSON.parse(storedScores) : [];
 
+    let highscore;
+    try {
+        highscore = storedScores ? JSON.parse(storedScores) : [];
+    } catch (e) {
+        console.error('Error parsing stored scores:', e);
+        highscore = []; // Default to an empty array if parsing fails
+    }
     // Convert new score to number and add to list
-    newScore = parseFloat(newScore);
-    highscore.push(newScore);
 
+
+
+    // Hämta spelarens namn
+
+    let scoreEntry = {
+        playerName: oGameData.trainerName, // Include trainer name
+        time: parseFloat(newScore)
+    };
+    highscore.push(scoreEntry);
     // Sort scores in ascending order (best time first)
     highscore.sort((a, b) => a - b);
 
@@ -149,7 +173,9 @@ function highScore(newScore) {
     displayHighScore();
 }
 
+
 function displayHighScore() {
+
     let highscoreList = document.querySelector("#highscoreList");
     highscoreList.innerHTML = ""; // Clear previous list
 
@@ -159,7 +185,7 @@ function displayHighScore() {
     // Create list items and append to highscore list
     highscore.forEach((score, index) => {
         let li = document.createElement("li");
-        li.textContent = `${index + 1}. Time: ${score.toFixed(2)}s`;
+        li.textContent = `${index + 1}. ${score.playerName} -  Time: ${score.toFixed(2)}s`;
         highscoreList.appendChild(li);
     });
 
@@ -237,10 +263,10 @@ function endGame() {
 
     let timeTaken = (oGameData.endTime - oGameData.startTime) / 1000;
     /*  alert(`Grattis, ${oGameData.trainerName}! Du fångade alla Pokémon på ${timeTaken.toFixed(2)} sekunder`); */
-
+    highScore(timeTaken);
     displayHighScore();
 
-    highScore(timeTaken);
+
 
     let playAgainBtn = document.querySelector("#playAgain");
 
