@@ -4,8 +4,7 @@
     padding: 0;
 }
 
-/* Ser till så att bilderna får korrekt storlek och deras rörelse animeras */
-/* När ni sätter intervallen efter vilken pokemonen får sin nya position bör den intervallen överensstämma med tiden här. 3s. */
+
 img {
     width: 300px;
     transition: all 3s linear;
@@ -31,8 +30,127 @@ img {
     background-position: center;
 }
 
+.flex-class {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form {
+    width: 40%;
+    gap: 6px;
+    background-color: rgba(174, 174, 174, 0.445);
+    padding: 1rem;
+    border-radius: 3rem;
+}
+
+label {
+    font-size: 1rem;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    color: white;
+
+}
+
+.form>input {
+    width: 40%;
+    height: 30px;
+    background: #FC6E51;
+    border-radius: .5rem;
+    text-align: center;
+}
+
+input::placeholder {
+    color: white;
+}
+
+input:focus {
+    background: #ff917b;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: #FC6E51;
+
+}
+
+.form>h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.form>h3 {
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    color: white;
+    font-weight: normal;
+}
+
+.form-text {
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    color: white;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: rgb(98, 0, 0);
+}
+
+button {
+    padding: 16px 42px;
+    box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.5);
+    line-height: 1.25;
+    background: #FC6E51;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+button:hover {
+    background: #b14c38;
+    transition: all 0.2s ease-in-out;
+}
+
 /* fånga pokemon */
 .caught {
-    transform: scale(0.9);
+    transform: scale(0.8);
     transition: all 3s linear;
+}
+
+.high-score {
+    border: 3px solid black;
+    background: rgb(170, 18, 30);
+    padding: 2rem;
+    border-radius: 5px;
+    justify-self: center;
+    position: relative;
+    top: 10rem;
+    text-align: center;
+}
+
+.high-score>h1 {
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.high-score>button {
+    margin-top: 0.5rem;
+}
+
+li {
+    list-style-type: none;
+    text-align: center;
+    color: white;
+    margin-bottom: 0.5rem;
 }
