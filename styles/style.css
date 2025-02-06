@@ -127,11 +127,9 @@ button:hover {
 
 /* fånga pokemon */
 .caught {
-    transform: scale(0.9);
+    transform: scale(0.8);
     transition: all 3s linear;
 }
-
-
 
 .high-score {
     border: 3px solid black;
@@ -144,9 +142,18 @@ button:hover {
     text-align: center;
 }
 
+.high-score>h1 {
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.high-score>button {
+    margin-top: 0.5rem;
+}
 
 li {
     list-style-type: none;
     text-align: center;
-
+    color: white;
+    margin-bottom: 0.5rem;
 }

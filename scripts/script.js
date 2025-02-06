@@ -15,7 +15,6 @@ startForm.addEventListener("submit", function (event) {
 
 });
 
-
 function validateForm() {
     oGameData.trainerName = document.querySelector("#nick").value;
     oGameData.trainerAge = document.querySelector("#age").value;
@@ -49,8 +48,6 @@ function validateForm() {
         return false;
     }
 }
-
-
 
 function startGame() {
 
@@ -103,9 +100,6 @@ function startGame() {
 
 }
 
-
-
-
 // Fisher Yates shuffle
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -136,12 +130,10 @@ function Spawnpokemon(randomPokemon) {
     });
 }
 
-
-
 function highScore(newScore) {
     // Load existing scores from localStorage
     let storedScores = localStorage.getItem("highscore");
-   
+
     let highscore;
     try {
         highscore = storedScores ? JSON.parse(storedScores) : [];
@@ -149,19 +141,18 @@ function highScore(newScore) {
         console.error('Error parsing stored scores:', e);
         highscore = []; // Default to an empty array if parsing fails
     }
-    // Convert new score to number and add to list
 
-
-
-    // Hämta spelarens namn
-
+    // Create a new score entry
     let scoreEntry = {
-        playerName: oGameData.trainerName, // Include trainer name
+        playerName: oGameData.trainerName,
         time: parseFloat(newScore)
     };
+
+    // Add the new score to the list
     highscore.push(scoreEntry);
+
     // Sort scores in ascending order (best time first)
-    highscore.sort((a, b) => a - b);
+    highscore.sort((a, b) => a.time - b.time);
 
     // Keep only the top 10 scores
     highscore = highscore.slice(0, 10);
@@ -173,9 +164,7 @@ function highScore(newScore) {
     displayHighScore();
 }
 
-
 function displayHighScore() {
-
     let highscoreList = document.querySelector("#highscoreList");
     highscoreList.innerHTML = ""; // Clear previous list
 
@@ -185,7 +174,7 @@ function displayHighScore() {
     // Create list items and append to highscore list
     highscore.forEach((score, index) => {
         let li = document.createElement("li");
-        li.textContent = `${index + 1}. ${score.playerName} -  Time: ${score.time}s`;
+        li.textContent = `${index + 1}. ${score.playerName} - Time: ${score.time.toFixed(2)}s`;
         highscoreList.appendChild(li);
     });
 
@@ -271,7 +260,6 @@ function endGame() {
     let playAgainBtn = document.querySelector("#playAgain");
 
 }
-
 
 document.querySelector("#playAgainBtn").addEventListener("click", function () {
     location.reload(); // Reload the page to restart the game
