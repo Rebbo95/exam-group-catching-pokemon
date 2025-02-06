@@ -15,6 +15,7 @@ startForm.addEventListener("submit", function (event) {
 
 });
 
+
 function validateForm() {
     oGameData.trainerName = document.querySelector("#nick").value;
     oGameData.trainerAge = document.querySelector("#age").value;
@@ -129,30 +130,29 @@ function Spawnpokemon(randomPokemon) {
         gameField.appendChild(pokemonImg);
     });
 }
+    
+
 
 function highScore(newScore) {
     // Load existing scores from localStorage
     let storedScores = localStorage.getItem("highscore");
-
+   
     let highscore;
     try {
         highscore = storedScores ? JSON.parse(storedScores) : [];
     } catch (e) {
         console.error('Error parsing stored scores:', e);
-        highscore = []; // Default to an empty array if parsing fails
+      // Default to an empty array if parsing fails
+        highscore = []; 
     }
 
-    // Create a new score entry
     let scoreEntry = {
-        playerName: oGameData.trainerName,
+        playerName: oGameData.trainerName, 
         time: parseFloat(newScore)
     };
-
-    // Add the new score to the list
     highscore.push(scoreEntry);
-
     // Sort scores in ascending order (best time first)
-    highscore.sort((a, b) => a.time - b.time);
+    highscore.sort((a, b) => a - b);
 
     // Keep only the top 10 scores
     highscore = highscore.slice(0, 10);
@@ -164,7 +164,9 @@ function highScore(newScore) {
     displayHighScore();
 }
 
+
 function displayHighScore() {
+
     let highscoreList = document.querySelector("#highscoreList");
     highscoreList.innerHTML = ""; // Clear previous list
 
@@ -174,7 +176,7 @@ function displayHighScore() {
     // Create list items and append to highscore list
     highscore.forEach((score, index) => {
         let li = document.createElement("li");
-        li.textContent = `${index + 1}. ${score.playerName} - Time: ${score.time.toFixed(2)}s`;
+        li.textContent = `${index + 1}. ${score.playerName} -  Time: ${score.time}s`;
         highscoreList.appendChild(li);
     });
 
@@ -245,17 +247,14 @@ function releasePokemon(pokemon) {
 }
 
 function endGame() {
-    //  gameField.classList.add("d-none");
+ 
     gameMusic.pause();
     oGameData.endTimeInMilliseconds();
     document.querySelectorAll(".pokemonImg").forEach(pokemon => pokemon.remove());
 
     let timeTaken = (oGameData.endTime - oGameData.startTime) / 1000;
-    /*  alert(`Grattis, ${oGameData.trainerName}! Du fångade alla Pokémon på ${timeTaken.toFixed(2)} sekunder`); */
     highScore(timeTaken);
     displayHighScore();
-
-
 
     let playAgainBtn = document.querySelector("#playAgain");
 
