@@ -185,7 +185,6 @@ function displayHighScore() {
     document.querySelector("#highScore").classList.remove("d-none");
 }
 
-
 function clearHighScore() {
     // Ask the user if they want to clear the highscore list
     let clearScores = confirm("Do you want to clear all highscores?");
