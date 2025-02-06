@@ -130,29 +130,30 @@ function Spawnpokemon(randomPokemon) {
         gameField.appendChild(pokemonImg);
     });
 }
-    
+
 
 
 function highScore(newScore) {
     // Load existing scores from localStorage
     let storedScores = localStorage.getItem("highscore");
-   
+
     let highscore;
     try {
         highscore = storedScores ? JSON.parse(storedScores) : [];
     } catch (e) {
         console.error('Error parsing stored scores:', e);
-      // Default to an empty array if parsing fails
-        highscore = []; 
+        highscore = []; // Default to an empty array if parsing fails
     }
 
     let scoreEntry = {
-        playerName: oGameData.trainerName, 
+        playerName: oGameData.trainerName,
         time: parseFloat(newScore)
     };
+
     highscore.push(scoreEntry);
+
     // Sort scores in ascending order (best time first)
-    highscore.sort((a, b) => a - b);
+    highscore.sort((a, b) => a.time - b.time);  // Sorting based on time property
 
     // Keep only the top 10 scores
     highscore = highscore.slice(0, 10);
@@ -247,7 +248,7 @@ function releasePokemon(pokemon) {
 }
 
 function endGame() {
- 
+
     gameMusic.pause();
     oGameData.endTimeInMilliseconds();
     document.querySelectorAll(".pokemonImg").forEach(pokemon => pokemon.remove());
